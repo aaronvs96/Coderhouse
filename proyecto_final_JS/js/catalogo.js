@@ -12,12 +12,12 @@ fetch("productos.json")
                                         <div class="card shadow-sm">
                                             <img src=${producto.img} alt="Foto de moto">
                                             <div class="card-body">                                        
-                                                <h3>${producto.marca}</h3>                                            
-                                                <p>${producto.nombreMoto}</p>                                           
-                                                <label>Precio:</label>
-                                                <p>$${producto.precio}</p>                                            
-
+                                                <h3 class="nombre-marca">${producto.marca}</h3>                                                
                                                 <div class="d-flex justify-content-between align-items-center">
+                                                    <div class="datos-extra">
+                                                        <p>${producto.nombreMoto}</p>
+                                                        <p>${formatoDolares(producto.precio)}</p>
+                                                    </div>
                                                     <div class="btn-group">
                                                         <button type="button" class="boton" data-product-id="${producto.id}"
                                                                                             data-product-img="${producto.img}"
@@ -106,7 +106,7 @@ fetch("productos.json")
                 }
 
                 guardar();
-                
+
             })
         })
     })
@@ -141,3 +141,11 @@ selectFiltro.addEventListener("change", () => {
 })
 
 
+//FORMATO DOLARES
+const formatoDolares = (monto) => {
+    const options2 = { style: 'currency', currency: 'USD' };
+    const numberFormat2 = new Intl.NumberFormat('en-US', options2);
+
+    console.log(numberFormat2.format(monto));
+    return numberFormat2.format(monto);
+}
