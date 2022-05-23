@@ -9,7 +9,7 @@ class Moto {
 }
 
 //VARIABLES
-listaProductos = [];
+let listaProductos = [];
 const btn_agregar_producto = document.getElementById("btn_agregar_producto");
 
 //FUNCIONES CREAR PRODUCTO
@@ -94,13 +94,8 @@ const eliminarProducto = (numeroMoto) => {
 
 
 //FORMATO DOLARES
-const formatoDolares = (monto) => {
-    const options2 = { style: 'currency', currency: 'USD' };
-    const numberFormat2 = new Intl.NumberFormat('en-US', options2);
+import {formatoDolares} from './formatoDolares.js';
 
-    // console.log(numberFormat2.format(monto));
-    return numberFormat2.format(monto);
-}
 
 const imprimirDatos = () => {
     if (verificarStorage() != undefined) {
