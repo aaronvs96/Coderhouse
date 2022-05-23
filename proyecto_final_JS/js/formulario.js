@@ -12,4 +12,4 @@ btn_enviar_formulario.addEventListener("click",()=>{
     setTimeout(()=>{
         location.href = "./carrito.html";
     },3000);    
-})
+}) 
