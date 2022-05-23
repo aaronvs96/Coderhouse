@@ -98,5 +98,5 @@ const imprimirDatos = () => {
     }
 
 }
-
+ 
 imprimirDatos();
