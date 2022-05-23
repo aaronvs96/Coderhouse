@@ -1,6 +1,7 @@
 const mostrarCotizacion = document.createElement("p");
 let nuevoTextoH = "";
 nuevoTextoH = document.createElement("p");
+
 //CLASE MOTO
 class Moto {
     constructor(id, marcaMoto, nombreMoto, precioMoto) {
@@ -25,9 +26,9 @@ class Moto {
 
             valorCuotaInteres = Math.round(valorCuota + (interesCuota * valorCuota));
             nuevoTextoH.innerHTML = `<h6>Valor de Cuota: ${formatoDolares(valorCuotaInteres)}</h6>`;
-                for (let i = 1; i <= cantidadCuota; i++) {
-                    precioFinal += valorCuotaInteres;
-                }
+            for (let i = 1; i <= cantidadCuota; i++) {
+                precioFinal += valorCuotaInteres;
+            }
             nuevoTextoH.innerHTML += `<h6>Interés por cuota: ${interesCuota * 100}%</h6>`;
             nuevoTextoH.innerHTML += `<h6>El precio final de tu moto es de ${formatoDolares(precioFinal)}<br></h6>`;
 
@@ -67,112 +68,25 @@ class Moto {
 }
 
 
-const listaMotos = [
-    {
-        "id": 1,
-        "marca": "BAJAJ",
-        "nombreMoto": "Bajaj Boxer-100 2021",
-        "precio": 890,
-        "img": "../img/listaMotos/bajaj-boxer-100-2021.png"
-    },
-    {
-        "id": 2,
-        "marca": "HONDA",
-        "nombreMoto": "Honda cb125F Twister 2022",
-        "precio": 1563,
-        "img": "../img/listaMotos/honda-cb125f-twister-2022.png"
-    },
-    {
-        "id": 3,
-        "marca": "HONDA",
-        "nombreMoto": "Honda Navi-110 2022",
-        "precio": 7425,
-        "img": "../img/listaMotos/honda-navi-110-2022.png"
-    },
-    {
-        "id": 4,
-        "marca": "HONDA",
-        "nombreMoto": "Honda X-Blade 2021",
-        "precio": 6633,
-        "img": "../img/listaMotos/honda-x-blade-2021.png"
-    },
-    {
-        "id": 5,
-        "marca": "NEXUS",
-        "nombreMoto": "Nexus 110a 2021",
-        "precio": 7485,
-        "img": "../img/listaMotos/nexus-110a-2021.png"
-    },
-    {
-        "id": 6,
-        "marca": "NEXUS",
-        "nombreMoto": "Nexus 110v 2021",
-        "precio": 2587,
-        "img": "../img/listaMotos/nexus-110v-2021.png"
-    },
-    {
-        "id": 7,
-        "marca": "NEXUS",
-        "nombreMoto": "Nexus 150dk 2021",
-        "precio": 8112,
-        "img": "../img/listaMotos/nexus-150dk-2021.png"
-    },
-    {
-        "id": 8,
-        "marca": "RONCO",
-        "nombreMoto": "Ronco RC-110c 2021",
-        "precio": 3250,
-        "img": "../img/listaMotos/ronco-rc-110c-2021.png"
-    },
-    {
-        "id": 9,
-        "marca": "SSENDA",
-        "nombreMoto": "Ssenda Finiti-150 Sport 2022",
-        "precio": 4100,
-        "img": "../img/listaMotos/ssenda-finiti-150-sport-2022.png"
-    },
-    {
-        "id": 10,
-        "marca": "SSENDA",
-        "nombreMoto": "Ssenda Gol-120 2022",
-        "precio": 1800,
-        "img": "../img/listaMotos/ssenda-gol-125-2022.png"
-    },
-    {
-        "id": 11,
-        "marca": "YAMAHA",
-        "nombreMoto": "Yamaha yb125 Chacarera 2021",
-        "precio": 5200,
-        "img": "../img/listaMotos/yamaha-yb125-chacarera-2021.png"
-    },
-    {
-        "id": 12,
-        "marca": "YAMAHA",
-        "nombreMoto": "Yamaha ybr125z 2021",
-        "precio": 3680,
-        "img": "../img/listaMotos/yamaha-ybr125z-2021.png"
-    }
-];
-
-
-const motosId = Object.fromEntries(listaMotos.map((moto) => {
-    return [moto.id, new Moto(moto.id, moto.marca, moto.nombreMoto, moto.precio)];
-}))
-// console.log(motosId);
-
-function cotizacion(opMoto, opcionCuotas) {
-    const moto = motosId[opMoto];
+function cotizacion(opMoto, opcionCuotas) {    
     const opCuota = parseInt(opcionCuotas);
-    // console.log(opMoto);
-    // console.log(opCuota);
-
-    mostrarCotizacion.innerHTML = `
-        <h5 class="title_cotizar">Cotizando: ${moto.nombreMoto}  -  Precio: ${formatoDolares(moto.precioMoto)}</h5>
-        <h6>Número de cuotas: ${opcionCuotas}</h6>
-    `;
-    document.getElementById("resultadoCotizacion")?.append(mostrarCotizacion);
-
-    moto.calcularCuota(opCuota);
+    fetch("productos.json")
+        .then(response => response.json())
+        .then(result => {
+            let productos = result;
+            const moto = productos.find((el) => el.nombreMoto === opMoto);
+            // console.log(moto.nombreMoto)
+            if (moto) {
+                mostrarCotizacion.innerHTML = `
+                                    <h5 class="title_cotizar">Cotizando: ${moto.nombreMoto}  -  Precio: ${formatoDolares(moto.precio)}</h5>
+                                    <h6>Número de cuotas: ${opcionCuotas}</h6>
+                                `;
+                document.getElementById("resultadoCotizacion")?.append(mostrarCotizacion);
+            }
+            const datos_cotizacion = new Moto(moto.id, moto.marca, moto.nombreMoto, moto.precio, moto.img);
+            datos_cotizacion.calcularCuota(opCuota);
+        })
+        .catch(error => console.log(error))
 }
 
 
@@ -184,14 +98,15 @@ fetch("productos.json")
         let productos = result;
         productos.forEach(producto => {
             selectMotos.innerHTML += `
-                <option value="${producto.id}">${producto.nombreMoto}</option>
+                <option value="${producto.nombreMoto}">${producto.nombreMoto}</option>
                 `
         })
     })
     .catch(error => console.log(error))
 
+// // evento para saber que moto elige en el select
 // selectMotos.addEventListener("change", () => {
-//     console.log(selectMotos.value)
+//     console.log(selectMotos.value);
 // })
 
 
@@ -235,10 +150,4 @@ boton_cotizar.addEventListener("click", (e) => {
 })
 
 //FORMATO DOLARES
-const formatoDolares = (monto) => {
-    const options2 = { style: 'currency', currency: 'USD' };
-    const numberFormat2 = new Intl.NumberFormat('en-US', options2);
-
-    // console.log(numberFormat2.format(monto));
-    return numberFormat2.format(monto);
-}
+import { formatoDolares } from './formatoDolares.js';
